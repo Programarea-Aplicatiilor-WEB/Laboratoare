@@ -60,7 +60,7 @@
 
   pre{background:var(--panel-2);border:1px solid var(--line);border-radius:7px;padding:12px 14px;
       overflow-x:auto;margin:0 0 16px}
-  pre code{background:none;padding:0;font-size:13px;line-height:1.6}
+  pre code{background:none;padding:0;font-size:13px;line-height:1.65}
 
   .note{background:var(--accent-soft);border-left:4px solid var(--accent);border-radius:7px;
         padding:12px 16px;margin:0 0 18px;font-size:15px}
@@ -94,10 +94,22 @@
     <div class="flow">
       <span>cont GitHub</span><em>→</em>
       <span>fork</span><em>→</em>
-      <span>încarci fișierele</span><em>→</em>
-      <span>pornești pagina</span><em>→</em>
+      <span>folderul tău</span><em>→</em>
+      <span>subfolder de laborator</span><em>→</em>
       <span>pull request</span>
     </div>
+
+    <h2>Structura fișierelor</h2>
+    <p>Ai un singur folder personal, în subgrupa ta, pe care îl folosești tot semestrul. În el ții pagina ta principală și câte un subfolder pentru fiecare laborator:</p>
+<pre><code>1341a/                        ← subgrupa ta
+  popescu-ana/                ← folderul tău, același tot semestrul
+    index.html                ← pagina ta principală, cu linkuri către laboratoare
+    lab1/
+      index.html              ← laboratorul 1
+      pagina1.html
+    lab2/
+      index.html              ← laboratorul 2</code></pre>
+    <p>La fiecare laborator faci două lucruri: creezi subfolderul <code>lab&lt;numărul&gt;</code> cu lucrarea respectivă și adaugi un rând nou în pagina ta principală, ca să se ajungă la ea.</p>
 
     <h2>Pasul 1 — Contul de GitHub</h2>
     <ol>
@@ -112,35 +124,66 @@
     </ol>
     <p>Primești o copie identică a repository-ului, în contul tău. Acolo lucrezi. Repository-ul laboratorului rămâne neatins până când predai lucrarea și este acceptată.</p>
 
-    <h2>Pasul 3 — Încarci fișierele lucrării</h2>
-    <p>Structura de foldere este fixă și trebuie respectată exact:</p>
-<pre><code>Lab1/&lt;grupa&gt;/&lt;nume-prenume&gt;/index.html
-Lab1/1341a/popescu-ana/index.html      ← exemplu</code></pre>
+    <h2>Pasul 3 — Îți creezi folderul personal (o singură dată)</h2>
     <ol>
-      <li>În copia ta, intri în folderul laboratorului și apoi în cel al grupei tale, de exemplu <code>Lab1/1341a</code>.</li>
-      <li>Apeși <b>Add file → Upload files</b> și tragi cu mouse-ul folderul lucrării tale (numit <code>nume-prenume</code>) peste zona de încărcare. Subfolderele se păstrează așa cum sunt.</li>
-      <li>Dacă preferi să scrii fișierul direct în browser: <b>Add file → Create new file</b>, iar în câmpul de nume scrii calea completă, <code>Lab1/1341a/popescu-ana/index.html</code>. Fiecare <code>/</code> creează un folder.</li>
-      <li>Jos, la <b>Commit changes</b>, scrii o descriere scurtă — „Laborator 1 – Popescu Ana, 1341A” — și confirmi.</li>
+      <li>În copia ta apeși <b>Add file → Create new file</b>.</li>
+      <li>În câmpul de nume scrii calea completă, cu subgrupa și numele tău:
+<pre><code>1341a/popescu-ana/index.html</code></pre>
+      Fiecare <code>/</code> creează automat un folder.</li>
+      <li>În zona de editare lipești șablonul de mai jos și îl completezi cu numele și subgrupa ta:</li>
+    </ol>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="ro"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;Popescu Ana – laboratoare&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Popescu Ana&lt;/h1&gt;
+  &lt;p&gt;Programarea aplicațiilor web – subgrupa 1341A&lt;/p&gt;
+
+  &lt;h2&gt;Laboratoare&lt;/h2&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;a href="lab1/"&gt;Laboratorul 1 – HTML&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+    <ol start="4">
+      <li>Jos, la <b>Commit changes</b>, scrii „Folder personal – Popescu Ana, 1341A” și confirmi.</li>
     </ol>
     <div class="note">
-      <b>Ca să modifici ceva mai târziu:</b> deschizi fișierul în copia ta și apeși pictograma creion (<i>Edit this file</i>), apoi <b>Commit changes</b>. Pentru modificări mai ample, din pagina repository-ului apeși tasta <kbd>.</kbd> (punct) și se deschide un editor complet în browser.
+      <b>Pagina ta principală crește în fiecare săptămână.</b> După fiecare laborator adaugi un rând nou în lista de mai sus — <code>&lt;li&gt;&lt;a href="lab2/"&gt;Laboratorul 2 – …&lt;/a&gt;&lt;/li&gt;</code> — astfel încât din ea să se ajungă la toate lucrările tale.
     </div>
 
-    <h2>Pasul 4 — Îți pornești propria pagină web</h2>
+    <h2>Pasul 4 — Încarci lucrarea unui laborator</h2>
+    <ol>
+      <li>În copia ta intri în folderul tău, de exemplu <code>1341a/popescu-ana</code>.</li>
+      <li>Apeși <b>Add file → Upload files</b> și tragi cu mouse-ul folderul laboratorului (numit <code>lab1</code>, <code>lab2</code> și așa mai departe) peste zona de încărcare. Subfolderele și imaginile se păstrează așa cum sunt.</li>
+      <li>Alternativ, scrii fișierele direct în browser: <b>Add file → Create new file</b>, cu calea completă, de exemplu <code>1341a/popescu-ana/lab1/index.html</code>.</li>
+      <li>La <b>Commit changes</b> scrii o descriere scurtă — „Laborator 1 – Popescu Ana” — și confirmi.</li>
+      <li>Deschizi <code>index.html</code> din folderul tău personal, apeși pictograma creion (<i>Edit this file</i>) și adaugi rândul către laboratorul tocmai încărcat.</li>
+    </ol>
+    <div class="note">
+      <b>Pentru modificări mai ample:</b> din pagina repository-ului apeși tasta <kbd>.</kbd> (punct). Se deschide un editor complet în browser, cu arbore de fișiere; la final, din panoul <i>Source Control</i>, apeși <b>Commit &amp; Push</b>.
+    </div>
+
+    <h2>Pasul 5 — Îți pornești propria pagină web</h2>
+    <p>Se face o singură dată, la primul laborator.</p>
     <ol>
       <li>În copia ta: <b>Settings</b> → în meniul din stânga <b>Pages</b>.</li>
       <li>La <i>Build and deployment</i> → <i>Source</i>: alegi <b>Deploy from a branch</b>.</li>
       <li>La <i>Branch</i> alegi <b>main</b>, iar la folder lași <b>/ (root)</b> → <b>Save</b>.</li>
-      <li>După un minut, reîncarci pagina de Settings. Apare o bandă verde: „Your site is live at…”. De acolo se deschide site-ul tău, iar lucrarea ta este la:</li>
+      <li>După un minut, reîncarci pagina de Settings: apare banda verde „Your site is live at…”. Paginile tale sunt la:</li>
     </ol>
-<pre><code>https://&lt;username-ul-tău&gt;.github.io/Laboratoare/Lab1/1341a/nume-prenume/</code></pre>
-    <p>Verifică la această adresă toate cerințele laboratorului: linkurile, căile relative între pagini, culorile, tabelul, imaginile. <b>Ce nu funcționează aici nu funcționează nici la corectare</b> — pagina care se vede corect doar pe calculatorul tău nu contează ca lucrare predată.</p>
+<pre><code>https://&lt;username-ul-tău&gt;.github.io/Laboratoare/1341a/popescu-ana/        ← pagina ta
+https://&lt;username-ul-tău&gt;.github.io/Laboratoare/1341a/popescu-ana/lab1/   ← laboratorul 1</code></pre>
+    <p>Verifică la aceste adrese toate cerințele laboratorului: linkurile, căile relative între pagini, culorile, tabelul, imaginile. <b>Ce nu funcționează aici nu funcționează nici la corectare</b> — pagina care se vede corect doar pe calculatorul tău nu contează ca lucrare predată.</p>
 
-    <h2>Pasul 5 — Predai lucrarea</h2>
+    <h2>Pasul 6 — Predai lucrarea</h2>
     <ol>
       <li>În copia ta apeși <b>Contribute → Open pull request</b> → <b>Create pull request</b>.</li>
-      <li>În titlu scrii laboratorul, numele și grupa: „Lab 1 – Popescu Ana – 1341A”.</li>
-      <li>În descriere lipești adresa paginii tale, obținută la pasul 4.</li>
+      <li>În titlu scrii laboratorul, numele și subgrupa: „Lab 1 – Popescu Ana – 1341A”.</li>
+      <li>În descriere lipești adresa paginii tale personale, obținută la pasul 5.</li>
     </ol>
     <p>Data și ora la care ai deschis cererea reprezintă data predării. Dacă primești observații, corectezi fișierele în copia ta și dai din nou <b>Commit changes</b>: cererea se actualizează singură, nu trebuie să trimiți alta.</p>
 
@@ -148,16 +191,17 @@ Lab1/1341a/popescu-ana/index.html      ← exemplu</code></pre>
 
     <h3>Ce conține o lucrare predată</h3>
     <ul>
-      <li>Toate fișierele cerute în fișa laboratorului, într-un singur folder cu numele tău.</li>
-      <li>O pagină principală numită <code>index.html</code>, din care se poate ajunge la celelalte pagini ale lucrării.</li>
-      <li>Fișierele auxiliare — imagini, fișiere CSS — încărcate în același folder, cu căi relative corecte.</li>
+      <li>Un subfolder <code>lab&lt;numărul&gt;</code> în folderul tău personal, cu toate fișierele cerute în fișa laboratorului.</li>
+      <li>În el, o pagină numită <code>index.html</code>, din care se ajunge la celelalte pagini ale lucrării.</li>
+      <li>Fișierele auxiliare — imagini, fișiere CSS — încărcate în același subfolder, cu căi relative corecte.</li>
+      <li>Un rând nou în pagina ta principală, care trimite către laboratorul respectiv.</li>
     </ul>
 
     <h3>Denumiri</h3>
     <ul>
-      <li>Litere mici, fără spații și fără diacritice: <code>popescu-ana</code>, nu <code>Popescu Ana</code>.</li>
+      <li>Litere mici, fără spații și fără diacritice: <code>popescu-ana</code>, nu <code>Popescu Ana</code>; <code>lab1</code>, nu <code>Lab 1</code>.</li>
       <li>Adresele web fac diferența între litere mari și mici: <code>Pagina1.html</code> și <code>pagina1.html</code> sunt două fișiere diferite.</li>
-      <li>Folderul tău păstrează același nume tot semestrul, în toate laboratoarele.</li>
+      <li>Folderul tău personal păstrează același nume tot semestrul; se schimbă doar subfolderele de laborator.</li>
     </ul>
 
     <h3>Termene</h3>
@@ -183,11 +227,15 @@ Lab1/1341a/popescu-ana/index.html      ← exemplu</code></pre>
         <tr><th>Ce vezi</th><th>Ce înseamnă și ce faci</th></tr>
         <tr>
           <td><b>Site not found</b></td>
-          <td>GitHub Pages nu este activat pe copia ta sau ai greșit adresa. Reia pasul 4 și verifică numele de utilizator din adresă.</td>
+          <td>GitHub Pages nu este activat pe copia ta sau ai greșit adresa. Reia pasul 5 și verifică numele de utilizator din adresă.</td>
         </tr>
         <tr>
           <td><b>404 File not found</b></td>
           <td>Nu există niciun fișier la calea cerută: fie pagina nu se numește <code>index.html</code>, fie ai încărcat-o în alt folder, fie ai greșit majusculele.</td>
+        </tr>
+        <tr>
+          <td>Laboratorul nu apare în pagina ta</td>
+          <td>Ai încărcat fișierele, dar nu ai adăugat rândul în <code>index.html</code> din folderul personal. Deschide-l și completează lista.</td>
         </tr>
         <tr>
           <td>Vezi pagina veche</td>
@@ -199,11 +247,11 @@ Lab1/1341a/popescu-ana/index.html      ← exemplu</code></pre>
         </tr>
         <tr>
           <td>Imaginea nu apare</td>
-          <td>Imaginea nu a fost încărcată în folderul tău sau numele din <code>&lt;img src&gt;</code> diferă prin majuscule ori prin extensie.</td>
+          <td>Imaginea nu a fost încărcată în subfolderul laboratorului sau numele din <code>&lt;img src&gt;</code> diferă prin majuscule ori prin extensie.</td>
         </tr>
         <tr>
           <td>Linkul dintre pagini nu merge</td>
-          <td>Folosește căi relative: <code>L1/pagina1.html</code> pentru o pagină dintr-un subfolder, <code>../index.html</code> pentru una cu un nivel mai sus. Calea de pe calculatorul tău (<code>C:\…</code>) nu funcționează pe server.</td>
+          <td>Folosește căi relative: <code>lab1/</code> pentru un subfolder, <code>../index.html</code> pentru pagina cu un nivel mai sus. Calea de pe calculatorul tău (<code>C:\…</code>) nu funcționează pe server.</td>
         </tr>
       </table>
     </div>
