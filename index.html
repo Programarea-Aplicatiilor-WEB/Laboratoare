@@ -1,14 +1,150 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8">
-  <title>Programarea aplicațiilor web – laboratoare</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Programarea aplicațiilor web – Laboratoare</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=JetBrains+Mono:wght@400&display=swap">
+<style>
+  :root{
+    --paper:#f5f6f8; --panel:#ffffff; --panel-2:#eef1f5;
+    --ink:#14192b; --muted:#5a6377; --line:#d8dde6;
+    --navy:#172b4d; --navy-soft:#e4e9f1;
+    --accent:#b1592a; --accent-soft:#f6e7de;
+    --ui:"Source Sans 3", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --serif:"Source Serif 4", Georgia, "Times New Roman", serif;
+    --mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --paper:#0f1219; --panel:#161b26; --panel-2:#1c2330;
+      --ink:#e6e9ef; --muted:#98a2b6; --line:#2a3242;
+      --navy:#9db4da; --navy-soft:#1b2436;
+      --accent:#e08a5c; --accent-soft:#2c2019;
+    }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--ui);font-size:16px;line-height:1.55}
+  a{color:var(--accent)}
+  .wrap{max-width:860px;margin:0 auto;padding:0 20px}
+
+  header{
+    background:var(--navy-soft);
+    border-bottom:1px solid var(--line);
+    background-image:linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:28px 28px, 28px 28px;
+    background-position:-1px -1px, -1px -1px;
+  }
+  header .wrap{padding-block:34px 30px}
+  .eyebrow{font-size:12.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  h1{font-family:var(--serif);font-size:clamp(26px,4.2vw,36px);line-height:1.15;margin:0 0 8px;color:var(--navy);text-wrap:balance}
+  .subtitle{margin:0;color:var(--muted);font-size:16px}
+  .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+  .tag{font-family:var(--mono);font-size:12px;padding:3px 9px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--muted)}
+
+  main .wrap{padding-block:34px 10px}
+  h2{font-family:var(--serif);font-size:21px;margin:0 0 4px;color:var(--ink)}
+  .section{margin-bottom:38px}
+  .section > p.lede{margin:0 0 18px;color:var(--muted)}
+
+  .callout{
+    display:flex;gap:16px;align-items:flex-start;
+    background:var(--accent-soft);border:1px solid var(--line);border-left:4px solid var(--accent);
+    border-radius:8px;padding:16px 18px;margin-bottom:38px;
+  }
+  .callout h2{margin-bottom:4px}
+  .callout p{margin:0 0 10px;color:var(--muted);font-size:15px}
+  .btn{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;font-weight:600;
+       padding:8px 16px;border-radius:7px;font-size:15px}
+  .btn:hover{filter:brightness(1.08)}
+
+  ul.labs{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
+  ul.labs li{background:var(--panel);border:1px solid var(--line);border-radius:8px}
+  ul.labs a{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;padding:14px 16px;text-decoration:none;color:var(--ink)}
+  ul.labs a:hover{border-color:var(--accent)}
+  .lab-no{font-family:var(--mono);font-size:12.5px;color:var(--accent);flex:none}
+  .lab-title{font-weight:600}
+  .lab-note{color:var(--muted);font-size:14px;margin-left:auto}
+
+  .soon{padding:14px 16px;color:var(--muted);font-size:15px;border:1px dashed var(--line);border-radius:8px;background:transparent}
+
+  dl.rules{margin:0;display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:15px}
+  dl.rules dt{font-family:var(--mono);font-size:13px;color:var(--navy);white-space:nowrap}
+  dl.rules dd{margin:0;color:var(--muted)}
+  @media (max-width:520px){ dl.rules{grid-template-columns:1fr;gap:2px} dl.rules dd{margin-bottom:10px} }
+
+  footer{border-top:1px solid var(--line);margin-top:20px;background:var(--panel)}
+  footer .wrap{padding-block:20px 26px;color:var(--muted);font-size:14px}
+  footer a{color:var(--muted)}
+  code{font-family:var(--mono);font-size:13.5px;background:var(--panel-2);padding:1px 5px;border-radius:4px}
+</style>
 </head>
 <body>
-  <h1>Programarea aplicațiilor web</h1>
-  <p>Lucrările de laborator ale studenților.</p>
-  <ul>
-    <li><a href="Lab1/1341a/student_exemplu">Grupa 1341A – Laboratorul 1 – exemplu</a></li>
-  </ul>
+
+<header>
+  <div class="wrap">
+    <p class="eyebrow">Universitatea Politehnica din București · Facultatea de Științe Aplicate</p>
+    <h1>Programarea aplicațiilor web</h1>
+    <p class="subtitle">Lucrările de laborator ale studenților, publicate direct de pe GitHub.</p>
+    <div class="meta">
+      <span class="tag">13-FSA-L-A4-S1</span>
+      <span class="tag">Seria MIAI</span>
+      <span class="tag">2026–2027</span>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+
+    <div class="callout">
+      <div>
+        <h2>Cum îți publici lucrarea</h2>
+        <p>Contul de GitHub, copierea repository-ului, încărcarea fișierelor, pornirea propriei pagini web și predarea lucrării — pas cu pas, împreună cu regulile de lucru și termenele.</p>
+        <a class="btn" href="instructiuni.html">Deschide instrucțiunile</a>
+      </div>
+    </div>
+
+    <section class="section">
+      <h2>Laboratoare</h2>
+      <p class="lede">Fiecare laborator are o lucrare-model, care arată structura de fișiere așteptată.</p>
+      <ul class="labs">
+        <li>
+          <a href="Lab1/1341a/student_exemplu/">
+            <span class="lab-no">L1</span>
+            <span class="lab-title">HTML — structura paginii, liste, formatare, tabele, linkuri</span>
+            <span class="lab-note">lucrare-model, grupa 1341A</span>
+          </a>
+        </li>
+      </ul>
+      <p class="lede" style="margin-top:12px">Laboratoarele următoare apar aici pe măsură ce sunt publicate.</p>
+    </section>
+
+    <section class="section">
+      <h2>Reguli de publicare</h2>
+      <p class="lede">Trei reguli care rezolvă aproape toate situațiile în care „nu se vede pagina”.</p>
+      <dl class="rules">
+        <dt>index.html</dt>
+        <dd>Pagina principală a fiecărei lucrări trebuie să se numească exact așa. Un folder fără <code>index.html</code> răspunde cu eroarea 404.</dd>
+        <dt>litere mici</dt>
+        <dd>Numele fișierelor și folderelor se scriu fără spații, fără diacritice și cu litere mici. Adresele fac diferența între <code>Pagina1.html</code> și <code>pagina1.html</code>.</dd>
+        <dt>toate fișierele</dt>
+        <dd>Paginile, imaginile și fișierele CSS se încarcă toate în folderul lucrării. Un fișier rămas pe calculatorul propriu nu se vede de nicăieri.</dd>
+      </dl>
+    </section>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    Cod sursă și predarea lucrărilor:
+    <a href="https://github.com/Programarea-Aplicatiilor-WEB/Laboratoare">github.com/Programarea-Aplicatiilor-WEB/Laboratoare</a>.
+    Site static, publicat prin GitHub Pages.
+  </div>
+</footer>
+
 </body>
 </html>
