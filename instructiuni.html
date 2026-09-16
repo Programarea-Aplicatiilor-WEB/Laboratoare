@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Instrucțiuni de lucru – Programarea aplicațiilor web</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=JetBrains+Mono:wght@400&display=swap">
+<style>
+  :root{
+    --paper:#f5f6f8; --panel:#ffffff; --panel-2:#eef1f5;
+    --ink:#14192b; --muted:#5a6377; --line:#d8dde6;
+    --navy:#172b4d; --navy-soft:#e4e9f1;
+    --accent:#b1592a; --accent-soft:#f6e7de;
+    --ui:"Source Sans 3", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --serif:"Source Serif 4", Georgia, "Times New Roman", serif;
+    --mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --paper:#0f1219; --panel:#161b26; --panel-2:#1c2330;
+      --ink:#e6e9ef; --muted:#98a2b6; --line:#2a3242;
+      --navy:#9db4da; --navy-soft:#1b2436;
+      --accent:#e08a5c; --accent-soft:#2c2019;
+    }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--ui);font-size:16px;line-height:1.6}
+  a{color:var(--accent)}
+  .wrap{max-width:780px;margin:0 auto;padding:0 20px}
+  code{font-family:var(--mono);font-size:13.5px;background:var(--panel-2);padding:1px 5px;border-radius:4px}
+  kbd{font-family:var(--ui);font-weight:600;background:var(--panel-2);border:1px solid var(--line);
+      border-radius:5px;padding:1px 7px;font-size:14px;white-space:nowrap}
+
+  header{background:var(--navy-soft);border-bottom:1px solid var(--line);
+    background-image:linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:28px 28px, 28px 28px;background-position:-1px -1px, -1px -1px}
+  header .wrap{padding-block:32px 28px}
+  .eyebrow{font-size:12.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  h1{font-family:var(--serif);font-size:clamp(25px,4vw,33px);line-height:1.15;margin:0 0 8px;color:var(--navy);text-wrap:balance}
+  .subtitle{margin:0;color:var(--muted)}
+
+  main .wrap{padding-block:30px 10px}
+  h2{font-family:var(--serif);font-size:22px;margin:38px 0 6px;color:var(--ink);text-wrap:balance}
+  h2:first-of-type{margin-top:0}
+  h3{font-size:16px;margin:24px 0 4px;color:var(--navy)}
+  p{margin:0 0 12px}
+  .lede{color:var(--muted)}
+
+  .flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:18px 0 26px;padding:14px 16px;
+        background:var(--panel);border:1px solid var(--line);border-radius:8px}
+  .flow span{font-family:var(--mono);font-size:12.5px;padding:4px 10px;border-radius:999px;background:var(--panel-2);color:var(--ink)}
+  .flow em{color:var(--muted);font-style:normal}
+
+  ol{padding-left:22px;margin:0 0 14px}
+  ol li{margin-bottom:9px}
+  ul{padding-left:20px;margin:0 0 14px}
+  ul li{margin-bottom:7px}
+
+  pre{background:var(--panel-2);border:1px solid var(--line);border-radius:7px;padding:12px 14px;
+      overflow-x:auto;margin:0 0 16px}
+  pre code{background:none;padding:0;font-size:13px;line-height:1.6}
+
+  .note{background:var(--accent-soft);border-left:4px solid var(--accent);border-radius:7px;
+        padding:12px 16px;margin:0 0 18px;font-size:15px}
+  .note b{color:var(--ink)}
+
+  table{border-collapse:collapse;width:100%;font-size:15px;margin:0 0 18px}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  th{background:var(--navy-soft);font-weight:600}
+  .tablewrap{overflow-x:auto}
+
+  footer{border-top:1px solid var(--line);margin-top:34px;background:var(--panel)}
+  footer .wrap{padding-block:20px 28px;color:var(--muted);font-size:14px}
+  footer a{color:var(--muted)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <p class="eyebrow">Universitatea Politehnica din București · Facultatea de Științe Aplicate</p>
+    <h1>Instrucțiuni de lucru și de predare</h1>
+    <p class="subtitle">Programarea aplicațiilor web · Seria MIAI · cum îți publici și cum predai lucrările de laborator</p>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+
+    <p class="lede">Lucrările de laborator nu se trimit pe e-mail și nu se predau pe hârtie: le publici pe internet, la o adresă proprie, și le predai printr-o cerere trimisă către repository-ul laboratorului. Tot ce urmează se face din browser, fără să instalezi nimic.</p>
+
+    <div class="flow">
+      <span>cont GitHub</span><em>→</em>
+      <span>fork</span><em>→</em>
+      <span>încarci fișierele</span><em>→</em>
+      <span>pornești pagina</span><em>→</em>
+      <span>pull request</span>
+    </div>
+
+    <h2>Pasul 1 — Contul de GitHub</h2>
+    <ol>
+      <li>Intri pe <a href="https://github.com">github.com</a> și apeși <b>Sign up</b>. Folosește o adresă de e-mail la care ai acces și confirmă mesajul primit.</li>
+      <li>Alege un nume de utilizator care să te identifice și pe care să nu-ți fie rușine să-l ai într-un CV — rămâne public și îl folosești tot semestrul.</li>
+    </ol>
+
+    <h2>Pasul 2 — Copia ta după repository (fork)</h2>
+    <ol>
+      <li>Deschizi <a href="https://github.com/Programarea-Aplicatiilor-WEB/Laboratoare">github.com/Programarea-Aplicatiilor-WEB/Laboratoare</a>.</li>
+      <li>Apeși butonul <b>Fork</b> (dreapta sus) → <b>Create fork</b>.</li>
+    </ol>
+    <p>Primești o copie identică a repository-ului, în contul tău. Acolo lucrezi. Repository-ul laboratorului rămâne neatins până când predai lucrarea și este acceptată.</p>
+
+    <h2>Pasul 3 — Încarci fișierele lucrării</h2>
+    <p>Structura de foldere este fixă și trebuie respectată exact:</p>
+<pre><code>Lab1/&lt;grupa&gt;/&lt;nume-prenume&gt;/index.html
+Lab1/1341a/popescu-ana/index.html      ← exemplu</code></pre>
+    <ol>
+      <li>În copia ta, intri în folderul laboratorului și apoi în cel al grupei tale, de exemplu <code>Lab1/1341a</code>.</li>
+      <li>Apeși <b>Add file → Upload files</b> și tragi cu mouse-ul folderul lucrării tale (numit <code>nume-prenume</code>) peste zona de încărcare. Subfolderele se păstrează așa cum sunt.</li>
+      <li>Dacă preferi să scrii fișierul direct în browser: <b>Add file → Create new file</b>, iar în câmpul de nume scrii calea completă, <code>Lab1/1341a/popescu-ana/index.html</code>. Fiecare <code>/</code> creează un folder.</li>
+      <li>Jos, la <b>Commit changes</b>, scrii o descriere scurtă — „Laborator 1 – Popescu Ana, 1341A” — și confirmi.</li>
+    </ol>
+    <div class="note">
+      <b>Ca să modifici ceva mai târziu:</b> deschizi fișierul în copia ta și apeși pictograma creion (<i>Edit this file</i>), apoi <b>Commit changes</b>. Pentru modificări mai ample, din pagina repository-ului apeși tasta <kbd>.</kbd> (punct) și se deschide un editor complet în browser.
+    </div>
+
+    <h2>Pasul 4 — Îți pornești propria pagină web</h2>
+    <ol>
+      <li>În copia ta: <b>Settings</b> → în meniul din stânga <b>Pages</b>.</li>
+      <li>La <i>Build and deployment</i> → <i>Source</i>: alegi <b>Deploy from a branch</b>.</li>
+      <li>La <i>Branch</i> alegi <b>main</b>, iar la folder lași <b>/ (root)</b> → <b>Save</b>.</li>
+      <li>După un minut, reîncarci pagina de Settings. Apare o bandă verde: „Your site is live at…”. De acolo se deschide site-ul tău, iar lucrarea ta este la:</li>
+    </ol>
+<pre><code>https://&lt;username-ul-tău&gt;.github.io/Laboratoare/Lab1/1341a/nume-prenume/</code></pre>
+    <p>Verifică la această adresă toate cerințele laboratorului: linkurile, căile relative între pagini, culorile, tabelul, imaginile. <b>Ce nu funcționează aici nu funcționează nici la corectare</b> — pagina care se vede corect doar pe calculatorul tău nu contează ca lucrare predată.</p>
+
+    <h2>Pasul 5 — Predai lucrarea</h2>
+    <ol>
+      <li>În copia ta apeși <b>Contribute → Open pull request</b> → <b>Create pull request</b>.</li>
+      <li>În titlu scrii laboratorul, numele și grupa: „Lab 1 – Popescu Ana – 1341A”.</li>
+      <li>În descriere lipești adresa paginii tale, obținută la pasul 4.</li>
+    </ol>
+    <p>Data și ora la care ai deschis cererea reprezintă data predării. Dacă primești observații, corectezi fișierele în copia ta și dai din nou <b>Commit changes</b>: cererea se actualizează singură, nu trebuie să trimiți alta.</p>
+
+    <h2>Metodologie de lucru</h2>
+
+    <h3>Ce conține o lucrare predată</h3>
+    <ul>
+      <li>Toate fișierele cerute în fișa laboratorului, într-un singur folder cu numele tău.</li>
+      <li>O pagină principală numită <code>index.html</code>, din care se poate ajunge la celelalte pagini ale lucrării.</li>
+      <li>Fișierele auxiliare — imagini, fișiere CSS — încărcate în același folder, cu căi relative corecte.</li>
+    </ul>
+
+    <h3>Denumiri</h3>
+    <ul>
+      <li>Litere mici, fără spații și fără diacritice: <code>popescu-ana</code>, nu <code>Popescu Ana</code>.</li>
+      <li>Adresele web fac diferența între litere mari și mici: <code>Pagina1.html</code> și <code>pagina1.html</code> sunt două fișiere diferite.</li>
+      <li>Folderul tău păstrează același nume tot semestrul, în toate laboratoarele.</li>
+    </ul>
+
+    <h3>Termene</h3>
+    <ul>
+      <li>Lucrarea se predă până la începutul laboratorului următor.</li>
+      <li>Ce încarci după termen rămâne vizibil ca modificare ulterioară, cu data ei — istoricul este public și nu poate fi rescris discret.</li>
+      <li>O lucrare respinsă se poate reface: corectezi în copia ta, iar cererea deja deschisă se actualizează automat.</li>
+    </ul>
+
+    <h3>Evaluare</h3>
+    <ul>
+      <li>Se evaluează pagina publicată, nu codul de pe calculatorul tău.</li>
+      <li>Observațiile le primești direct pe linia de cod, în pull request; le vezi în tabul <i>Files changed</i> și primești notificare pe e-mail.</li>
+      <li>Punctajul fiecărei lucrări este anunțat la laborator, odată cu cerințele.</li>
+    </ul>
+
+    <h3>Lucrare proprie</h3>
+    <p>Lucrarea o scrii tu. Poți discuta soluții cu colegii și poți folosi documentația, dar codul predat trebuie să fie al tău și trebuie să poți explica orice linie din el. Istoricul modificărilor este public: se vede când și cum a apărut fiecare bucată de cod.</p>
+
+    <h2>Probleme frecvente</h2>
+    <div class="tablewrap">
+      <table>
+        <tr><th>Ce vezi</th><th>Ce înseamnă și ce faci</th></tr>
+        <tr>
+          <td><b>Site not found</b></td>
+          <td>GitHub Pages nu este activat pe copia ta sau ai greșit adresa. Reia pasul 4 și verifică numele de utilizator din adresă.</td>
+        </tr>
+        <tr>
+          <td><b>404 File not found</b></td>
+          <td>Nu există niciun fișier la calea cerută: fie pagina nu se numește <code>index.html</code>, fie ai încărcat-o în alt folder, fie ai greșit majusculele.</td>
+        </tr>
+        <tr>
+          <td>Vezi pagina veche</td>
+          <td>Publicarea durează până la un minut după commit. Reîncarcă forțat cu <kbd>Ctrl</kbd>+<kbd>F5</kbd> (<kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd> pe Mac).</td>
+        </tr>
+        <tr>
+          <td>Stilurile nu se aplică</td>
+          <td>Fișierul CSS nu a fost încărcat sau calea din <code>&lt;link&gt;</code> nu corespunde structurii de foldere de pe server.</td>
+        </tr>
+        <tr>
+          <td>Imaginea nu apare</td>
+          <td>Imaginea nu a fost încărcată în folderul tău sau numele din <code>&lt;img src&gt;</code> diferă prin majuscule ori prin extensie.</td>
+        </tr>
+        <tr>
+          <td>Linkul dintre pagini nu merge</td>
+          <td>Folosește căi relative: <code>L1/pagina1.html</code> pentru o pagină dintr-un subfolder, <code>../index.html</code> pentru una cu un nivel mai sus. Calea de pe calculatorul tău (<code>C:\…</code>) nu funcționează pe server.</td>
+        </tr>
+      </table>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <a href="index.html">← Înapoi la pagina laboratoarelor</a> · Repository:
+    <a href="https://github.com/Programarea-Aplicatiilor-WEB/Laboratoare">Programarea-Aplicatiilor-WEB/Laboratoare</a>
+  </div>
+</footer>
+
+</body>
+</html>
