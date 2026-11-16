@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Tabel masini</title>
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+</style>
+</head>
+<body>
+<h1>Masinile dorite</h1>
+
+<form id="formMasina" onsubmit="return adaugaMasina()" novalidate>
+  <input id="marca" placeholder="Marca" required>
+  <input id="model" placeholder="Model" required>
+  <input id="culoare" placeholder="Culoare" required>
+  <input id="anFab" type="number" placeholder="An fabricatie" required>
+  <button type="submit">Adauga masina</button>
+</form>
+
+<p id="mesaj" style="color: red;"></p>
+
+<table id="tm">
+  <tr>
+    <th>Marca</th>
+    <th>Model</th>
+    <th>Culoare</th>
+    <th>An fabricatie</th>
+  </tr>
+</table>
+
+<script>
+var m1 = new masina("Opel", "Zafira", "gri", 2015);
+var m2 = new masina("Seat", "Ibiza", "roz", 2018);
+
+document.getElementById("tm").innerHTML += m1.randNou();
+document.getElementById("tm").innerHTML += m2.randNou();
+
+if (localStorage.masinaN) {
+  var masinaJSON = localStorage.masinaN;
+  var mNoua = JSON.parse(masinaJSON);
+
+  if (mNoua.randNou && mNoua.anFab !== undefined) {
+    document.getElementById("tm").innerHTML += mNoua.randNou;
+  }
+}
+
+function masina(mk, md, cl, an) {
+  this.marca = mk;
+  this.model = md;
+  this.culoare = cl;
+  this.anFab = an;
+  this.randNou = function() {
+    return "<tr><td>" + this.marca + "</td><td>" + this.model + "</td><td>" + this.culoare + "</td><td>" + this.anFab + "</td></tr>";
+  };
+}
+
+function valideaza(marca, model, culoare, an) {
+  var anCurent = new Date().getFullYear();
+
+  if (!marca || marca.trim() == "") {
+    return "Marca nu poate fi goala.";
+  }
+  if (!model || model.trim() == "") {
+    return "Modelul nu poate fi gol.";
+  }
+  if (!culoare || culoare.trim() == "") {
+    return "Culoarea nu poate fi goala.";
+  }
+
+  var anNum = Number(an);
+  if (!an || String(an).trim() == "" || !Number.isInteger(anNum) || anNum < 1900 || anNum > anCurent) {
+    return "Anul trebuie sa fie un numar intreg intre 1900 si " + anCurent + ".";
+  }
+
+  return "";
+}
+
+function adaugaMasina() {
+  var marca = document.getElementById("marca").value;
+  var model = document.getElementById("model").value;
+  var culoare = document.getElementById("culoare").value;
+  var an = document.getElementById("anFab").value;
+
+  var eroare = valideaza(marca, model, culoare, an);
+  if (eroare != "") {
+    document.getElementById("mesaj").innerHTML = eroare;
+    return false;
+  }
+
+  document.getElementById("mesaj").innerHTML = "";
+
+  var mNoua = new masina(marca.trim(), model.trim(), culoare.trim(), Number(an));
+  document.getElementById("tm").innerHTML += mNoua.randNou();
+
+  mNoua.randNou = mNoua.randNou().toString();
+  var myJSON = JSON.stringify(mNoua);
+  localStorage.setItem("masinaN", myJSON);
+
+  document.getElementById("formMasina").reset();
+  return false;
+}
+
+/*
+a) cheia 'masiniN' din localStorage contine un sir de caractere in format JSON cu prop obiectului mNoua, inclusiv rand nou
+  Exemplu (pentru Dacia, Logan, alb):
+  {"marca":"Dacia","model":"Logan","culoare":"alb","randNou":"<tr><td>Dacia</td><td>Logan</td><td>alb</td></tr>"}
+
+b) formatul JSON nu poate salva functii sau metode, asa ca inlocuim metoda cu rezultatul ei ca sa putem salva in json.
+  fara aceasta linie mNoua.randNou ar fi undefined.
+
+c) daca am scrie mNoua.randNou() s-ar apela un string ca pe o functie si ar da eroare
+
+d) apare o singura masina, la fel ca L8_A. cele 2 masini predefinite + cea noua adaugata.
+*/
+</script>
+</body>
+</html>
