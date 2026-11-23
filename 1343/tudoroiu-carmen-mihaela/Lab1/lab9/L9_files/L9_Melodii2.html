@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Tabel melodii</title>
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+* {
+        box-sizing: border-box;
+      }
+.loginPopup {
+        position: relative;
+        text-align: center;
+        width: 100%;
+      }
+      .formPopup {
+        display: none;
+        position: fixed;
+        left: 45%;
+        top: 5%;
+        transform: translate(-50%, 5%);
+        border: 3px solid #999999;
+        z-index: 9;
+      }
+	        .formContainer {
+        max-width: 400px;
+        padding: 20px;
+        background-color: #fff;
+      }
+	        .formContainer input[type=text]{
+        width: 80%;
+        padding: 15px;
+        margin: 5px 0 20px 0;
+        border: none;
+        background: #eee;
+      }
+      .error {
+        color: red;
+        font-weight: bold;
+        margin-top: 10px;
+      }
+</style>
+</head>
+<body>
+<h1 > Melodii incarcate de pe server </h1>
+
+<p>
+
+<button onclick="inregistreazaSiIncarcaTabel('Melodii_JSON.txt')">Incarca melodiile de pe server</button>
+<!--<button onclick="inregistreazaSiIncarcaTabel('fisier_gresit.txt')">Incarca melodiile de pe server</button>-->
+<br>
+<br><br>
+<button onclick="openFormA()"> Adauga melodie</button>
+<table id="tm">
+<tr>
+    <th>Titlu</th>
+	<th>Interpretata de</th>
+    <th>Versuri</th>
+    <th>Muzica</th>
+	<th colspan=2 style="text-align:center">Operatii</th>
+  </tr>
+  
+</table>
+</p>
+<div><span id="raw"> </span></div>
+<div id="eroare" class="error"></div>
+
+<div class="formPopup" id="adauga">
+        <form action="javascript:;" onsubmit="adaugaMelodie(this)" class="formContainer">
+          <h2>Adauga melodie</h2>
+          <label for="titluA"><strong>Titlu</strong></label>
+          <input type="text" id="titluA" placeholder="Titlul melodiei" name="titluA" required>
+          
+          <label for="interpretareA"><strong>Interpret</strong></label>
+          <input type="text" id="interpretareA" placeholder="Interpretul" name="interpretareA" required>
+		  
+          <label for="versuriA"><strong>Versuri</strong></label>
+          <input type="text" id="versuriA" placeholder="Autor versuri" name="versuriA" required>
+
+          <label for="muzicaA"><strong>Muzica</strong></label>
+          <input type="text" id="muzicaA" placeholder="Autor muzica" name="muzicaA" required>
+
+          <button type="submit" class="btn">Adauga</button>
+          <button type="button" class="btn cancel" onclick="closeForm('adauga')">Close</button>
+        </form>
+      </div>
+
+	  <div class="formPopup" id="modifica">
+        <form action="javascript:;" onsubmit="modificaMelodie()" class="formContainer">
+          <h2>Modifica melodie</h2>
+          <label for="titluM"><strong>Titlu</strong></label>
+          <input type="text" id="titluM" placeholder="Titlul melodiei" name="titluM" required>
+          
+          <label for="interpretareM"><strong>Interpret</strong></label>
+          <input type="text" id="interpretareM" placeholder="Interpretul" name="interpretareM" required>
+		  
+          <label for="versuriM"><strong>Versuri</strong></label>
+          <input type="text" id="versuriM" placeholder="Autor versuri" name="versuriM" required>
+
+          <label for="muzicaM"><strong>Muzica</strong></label>
+          <input type="text" id="muzicaM" placeholder="Autor muzica" name="muzicaM" required>
+
+          <button type="submit" class="btn">Modifica</button>
+          <button type="button" class="btn cancel" onclick="closeForm('modifica')">Close</button>
+        </form>
+      </div>
+
+<script>
+const melodii2Show = [];
+let fileContent;
+let row = 0;
+let nr = 0;
+
+window.onload = function() {
+  let stored = localStorage.getItem("melodiiArray");
+  if (stored) {
+    try {
+      let parsed = JSON.parse(stored);
+      melodii2Show.length = 0;
+      for (let i = 0; i < parsed.length; i++) {
+        melodii2Show.push(parsed[i]);
+      }
+      afiseazaTabel();
+    } catch (e) {
+      console.error(e);
+    }
+  }
+};
+
+async function inregistreazaSiIncarcaTabel(file) {
+  let errorDiv = document.getElementById("eroare");
+  errorDiv.innerHTML = "";
+  try {
+    let myObject = await fetch(file);
+    if (!myObject.ok) {
+      throw new Error("Eroare la incarcarea fisierului (Cod eroare: " + myObject.status + ")");
+    }
+    fileContent = await myObject.text();
+    document.getElementById("raw").innerHTML = fileContent;
+    var melodiiStored = JSON.parse(fileContent);
+    melodii2Show.length = 0;
+    for(let i = 0; i < melodiiStored.length; i++){
+      melodii2Show.push(melodiiStored[i]);
+    }
+    var myJSON = JSON.stringify(melodii2Show);
+    localStorage.setItem("melodiiArray", myJSON);
+    afiseazaTabel();
+  } catch (error) {
+    errorDiv.innerHTML = "A aparut o eroare: " + error.message;
+  }
+}
+
+function afiseazaTabel() {
+  let tabelHTML = "<tr><th>Titlu</th><th>Interpretata de</th><th>Versuri</th><th>Muzica</th><th colspan=2 style='text-align:center'>Operatii</th></tr>";
+  for(let i = 0; i < melodii2Show.length; i++){
+    let m_curenta = new melodie(melodii2Show[i].titlu, melodii2Show[i].muzica, melodii2Show[i].versuri, melodii2Show[i].interpretare);
+    tabelHTML += m_curenta.randNou() + "<td><button onclick='openForm("+i+")'>Modificare</button></td><td><button onclick='stergeMelodie("+i+")'>Stergere</button></td></tr>";
+  }
+  document.getElementById("tm").innerHTML = tabelHTML;
+}
+
+function modificaMelodie(){
+  melodii2Show[nr].titlu = titluM.value;
+  melodii2Show[nr].muzica = muzicaM.value;
+  melodii2Show[nr].versuri = versuriM.value;
+  melodii2Show[nr].interpretare = interpretareM.value;
+
+  var myJSON = JSON.stringify(melodii2Show);
+  localStorage.setItem("melodiiArray", myJSON);
+
+  titluM.value = null;
+  muzicaM.value = null;
+  versuriM.value = null;
+  interpretareM.value = null;
+  closeForm("modifica");
+
+  afiseazaTabel();
+}
+
+function stergeMelodie(nr){
+  melodii2Show.splice(nr, 1);
+  var myJSON = JSON.stringify(melodii2Show);
+  localStorage.setItem("melodiiArray", myJSON);
+
+  afiseazaTabel();
+}
+
+function melodie(ti, mu, ve, i){
+  this.titlu = ti;
+  this.muzica = mu;
+  this.versuri = ve;
+  this.interpretare = i;
+  this.randNou = function() {return "<tr><td>" + this.titlu + "</td><td>" + this.interpretare + "</td><td>" + this.versuri + "</td><td>" + this.muzica + "</td>"}
+}
+
+function adaugaMelodie(frm) {
+  var mNouaObj = {
+    titlu: frm.titluA.value,
+    muzica: frm.muzicaA.value,
+    versuri: frm.versuriA.value,
+    interpretare: frm.interpretareA.value
+  };
+
+  melodii2Show.push(mNouaObj);
+  var myJSON = JSON.stringify(melodii2Show);
+  localStorage.setItem("melodiiArray", myJSON);
+
+  frm.titluA.value = null;
+  frm.muzicaA.value = null;
+  frm.versuriA.value = null;
+  frm.interpretareA.value = null;
+  closeForm("adauga");
+
+  afiseazaTabel();
+}
+
+function openFormA() {
+  document.getElementById("adauga").style.display = "block";
+}
+
+function openForm(rand) {
+  let frm = document.getElementById("modifica");
+  frm.style.display = "block";
+  nr = rand;
+  titluM.value = melodii2Show[nr].titlu;
+  interpretareM.value = melodii2Show[nr].interpretare;
+  versuriM.value = melodii2Show[nr].versuri;
+  muzicaM.value = melodii2Show[nr].muzica;
+}
+
+function closeForm(opt) {
+  document.getElementById(opt).style.display = "none";
+}
+</script>
+<!-- 
+Rezolvare Exercițiu 3:
+- Ce este deja adaptat la melodii: Structura generală a tabelului (coloanele Titlu, Interpret, Versuri, Muzică), câmpurile din formularele de adăugare și modificare, precum și funcțiile de bază pentru manipularea array-ului (afișare, adăugare, modificare, ștergere).
+- Ce nu este adaptat: Denumirile claselor CSS (ex: ".loginPopup" sau stilurile care păstrează denumiri generice de la un formular de autentificare vechi) și lipsa unei validări robuste a datelor introduse în formulare înainte de a fi salvate în localStorage.
+- Erori care apar la operații:
+  1. Încărcare / Afișare: Dacă fișierul "Melodii_JSON.txt" nu se află pe server sau pe calea corectă, funcția `getAJAX` nu va prelua datele corect, iar `loadTable()` va arunca o eroare de tip "SyntaxError: JSON.parse: unexpected end of data" sau va afișa tabelul gol.
+  2. Ștergere / Modificare: Dacă se încearcă modificarea sau ștergerea unui rând înainte de a încărca datele în tabel (când array-ul `melodii2Show` este gol), indicii pot deveni invalizi, ducând la comportamente neașteptate sau date nedefinite în `localStorage`.
+  3. Adăugare: Dacă formularul este trimis fără completarea câmpurilor obligatorii (deși au atributul `required`), pot apărea blocaje sau date nule salvate în array-ul de melodii.
+-->
+</body>
+</html>
