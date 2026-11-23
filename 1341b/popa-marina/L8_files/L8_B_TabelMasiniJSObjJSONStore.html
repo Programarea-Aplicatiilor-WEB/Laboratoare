@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Tabel masini - L8_B</title>
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+#mesaj {
+  color: red;
+  font-weight: bold;
+}
+</style>
+</head>
+<body>
+<h1>Masinile dorite</h1>
+
+<form onsubmit="return adaugaMasina()">
+  <input id="marca" placeholder="Marca" required>
+  <input id="model" placeholder="Model" required>
+  <input id="culoare" placeholder="Culoare" required>
+  <input id="anFab" type="number" placeholder="An fabricatie" required>
+  <button type="submit">Adauga masina</button>
+</form>
+
+<p id="mesaj"></p>
+
+<table id="tm">
+  <tr>
+    <th>Marca</th>
+    <th>Model</th>
+    <th>Culoare</th>
+    <th>An fabricatie</th>
+  </tr>
+</table>
+
+<script>
+var m1 = new masina("Opel", "Zafira", "gri", 2015);
+var m2 = new masina("Seat", "Ibiza", "roz", 2018);
+
+document.getElementById("tm").innerHTML += m1.randNou();
+document.getElementById("tm").innerHTML += m2.randNou();
+
+if (localStorage.masinaN) {
+  var masinaJSON = localStorage.masinaN;
+  var mNoua = JSON.parse(masinaJSON);
+  document.getElementById("tm").innerHTML += mNoua.randNou;
+}
+
+function masina(mk, md, cl, an) {
+  this.marca = mk;
+  this.model = md;
+  this.culoare = cl;
+  this.anFab = an;
+  this.randNou = function() {
+    return "<tr><td>" + this.marca + "</td><td>" + this.model + "</td><td>" + this.culoare + "</td><td>" + this.anFab + "</td></tr>";
+  };
+}
+
+function valideaza(marca, model, culoare, an) {
+  var anCurent = new Date().getFullYear();
+
+  if (marca === "" || model === "" || culoare === "") {
+    return "Marca, modelul si culoarea nu pot fi goale sau formate doar din spatii.";
+  }
+
+  if (!Number.isInteger(an) || an < 1900 || an > anCurent) {
+    return "Anul fabricatiei trebuie sa fie un numar intreg intre 1900 si " + anCurent + ".";
+  }
+
+  return "";
+}
+
+function adaugaMasina() {
+  var marca = document.getElementById("marca").value.trim();
+  var model = document.getElementById("model").value.trim();
+  var culoare = document.getElementById("culoare").value.trim();
+  var an = Number(document.getElementById("anFab").value);
+
+  var eroare = valideaza(marca, model, culoare, an);
+  if (eroare !== "") {
+    document.getElementById("mesaj").textContent = eroare;
+    return false;
+  }
+
+  document.getElementById("mesaj").textContent = "";
+
+  var mNoua = new masina(marca, model, culoare, an);
+  document.getElementById("tm").innerHTML += mNoua.randNou();
+
+  mNoua.randNou = mNoua.randNou().toString();
+  var myJSON = JSON.stringify(mNoua);
+
+  localStorage.setItem("masinaN", myJSON);
+
+  return false;
+}
+</script>
+
+<!--
+Exercitiul 4:
+(a) Dupa adaugarea unei masini, cheia masinaN din Local Storage contine un sir de caractere in format JSON cu toate proprietatile 
+obiectului mNoua (marca, model, culoare si randNou transformat in text HTML). 
+Exemplu: {"marca":"Dacia","model":"Logan","culoare":"alb","randNou":"<tr><td>Dacia</td><td>Logan</td><td>alb</td></tr>"}.
+
+(b) Functia JSON.stringify() omite metodele (functiile) unui obiect la transformarea in text JSON.
+ Linia mNoua.randNou = mNoua.randNou().toString(); apeleaza metoda si salveaza rezultatul ei (codul HTML al randului) 
+ ca text in proprietatea randNou. Fara aceasta linie, proprietatea randNou s-ar pierde la salvare, iar 
+ la reincarcarea paginii mNoua.randNou ar fi undefined.
+
+(c) La reincarcare se scrie mNoua.randNou fara paranteze deoarece JSON.parse() returneaza 
+un obiect simplu (nu o instanta a constructorului masina), in care randNou este deja un sir de caractere (string), 
+nu o functie. Apelarea cu paranteze ar produce eroarea TypeError: mNoua.randNou is not a function.
+
+(d) Dupa reincarcare apare o singura masina adaugata (ultima introdusa), la fel ca in L8_A, deoarece fiecare 
+adaugare noua suprascrie aceeasi cheie masinaN din Local Storage (diferenta este ca toate atributele masinii 
+sunt grupate intr-o singura cheie JSON, nu in chei separate).
+-->
+</body>
+</html>
