@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Tabel melodii</title>
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+* {
+  box-sizing: border-box;
+}
+.loginPopup {
+  position: relative;
+  text-align: center;
+  width: 100%;
+}
+.formPopup {
+  display: none;
+  position: fixed;
+  left: 45%;
+  top: 5%;
+  transform: translate(-50%, 5%);
+  border: 3px solid #999999;
+  z-index: 9;
+}
+.formContainer {
+  max-width: 400px;
+  padding: 20px;
+  background-color: #fff;
+}
+.formContainer input[type=text]{
+  width: 80%;
+  padding: 15px;
+  margin: 5px 0 20px 0;
+  border: none;
+  background: #eee;
+}
+</style>
+</head>
+<body>
+<h1>Melodii incarcate de pe server</h1>
+
+<p>
+<button onclick="getAJAX('Melodii_JSON.txt')">Incarca array melodii de pe server</button>
+<br><br><br>
+<button onclick="loadTable()">Incarca tabel melodii</button>
+<br><br><br>
+<button onclick="openFormA()">Adauga melodie</button>
+<table id="tm">
+  <tr>
+    <th>Titlu</th>
+    <th>Interpretata de</th>
+    <th>Versuri</th>
+    <th>Muzica</th>
+    <th colspan=2 style="text-align:center">Operatii</th>
+  </tr>
+</table>
+</p>
+
+<div><span id="raw"> </span></div>
+
+<div class="formPopup" id="adauga">
+  <form action="javascript:;" onsubmit="adaugaMelodie(this)" class="formContainer">
+    <h2>Adauga melodie</h2>
+    <label for="titlu"><strong>Titlu</strong></label>
+    <input type="text" id="titlu" placeholder="Titlul melodiei" name="titlu" required>
+    <label for="interpretare"><strong>Interpret</strong></label>
+    <input type="text" id="interpretare" placeholder="Interpretul melodiei" name="interpretare" required>
+    <label for="versuri"><strong>Versuri</strong></label>
+    <input type="text" id="versuri" placeholder="Autorul versurilor" name="versuri" required>
+    <label for="muzica"><strong>Muzica</strong></label>
+    <input type="text" id="muzica" placeholder="Autorul muzicii" name="muzica" required>
+    <button type="submit" class="btn">Adauga</button>
+    <button type="button" class="btn cancel" onclick="closeForm('adauga')">Close</button>
+  </form>
+</div>
+
+<div class="formPopup" id="modifica">
+  <form action="javascript:;" onsubmit="modificaMelodie()" class="formContainer">
+    <h2>Modifica melodie</h2>
+    <label for="titluM"><strong>Titlu</strong></label>
+    <input type="text" id="titluM" placeholder="Titlul melodiei" name="titluM" required>
+    <label for="interpretareM"><strong>Interpret</strong></label>
+    <input type="text" id="interpretareM" placeholder="Interpretul melodiei" name="interpretareM" required>
+    <label for="versuriM"><strong>Versuri</strong></label>
+    <input type="text" id="versuriM" placeholder="Autorul versurilor" name="versuriM" required>
+    <label for="muzicaM"><strong>Muzica</strong></label>
+    <input type="text" id="muzicaM" placeholder="Autorul muzicii" name="muzicaM" required>
+    <button type="submit" class="btn">Modifica</button>
+    <button type="button" class="btn cancel" onclick="closeForm('modifica')">Close</button>
+  </form>
+</div>
+
+<script>
+const melodii2Show = [];
+let fileContent;
+let nr = 0;
+
+async function getAJAX(file) {
+  let myObject = await fetch(file);
+  fileContent = await myObject.text();
+}
+
+function afiseazaTabel() {
+  document.getElementById("tm").innerHTML =
+    "<tr><th>Titlu</th><th>Interpretata de</th><th>Versuri</th><th>Muzica</th><th colspan=2 style='text-align:center'>Operatii</th></tr>";
+
+  for (let i = 0; i < melodii2Show.length; i++) {
+    let m_curenta = new melodie(
+      melodii2Show[i].titlu,
+      melodii2Show[i].muzica,
+      melodii2Show[i].versuri,
+      melodii2Show[i].interpretare
+    );
+
+    document.getElementById("tm").innerHTML +=
+      m_curenta.randNou() +
+      "<td><button onclick='openForm(" + i + ")'>Modificare</button></td>" +
+      "<td><button onclick='stergeMelodie(" + i + ")'>Stergere</button></td></tr>";
+  }
+}
+
+function loadTable() {
+  document.getElementById("raw").innerHTML = fileContent;
+  var melodiiStored = JSON.parse(fileContent);
+
+  melodii2Show.length = 0;
+  for (let i = 0; i < melodiiStored.length; i++) {
+    melodii2Show.push(melodiiStored[i]);
+  }
+
+  afiseazaTabel();
+}
+
+function stergeMelodie(nr) {
+  melodii2Show.splice(nr, 1);
+  var myJSON = JSON.stringify(melodii2Show);
+  localStorage.setItem("melodiiArray", myJSON);
+  afiseazaTabel();
+}
+
+function modificaMelodie() {
+  var mMod = {
+    titlu: document.getElementById("titluM").value,
+    muzica: document.getElementById("muzicaM").value,
+    versuri: document.getElementById("versuriM").value,
+    interpretare: document.getElementById("interpretareM").value
+  };
+
+  melodii2Show.splice(nr, 1, mMod);
+  var myJSON = JSON.stringify(melodii2Show);
+  localStorage.setItem("melodiiArray", myJSON);
+
+  document.getElementById("titluM").value = "";
+  document.getElementById("interpretareM").value = "";
+  document.getElementById("versuriM").value = "";
+  document.getElementById("muzicaM").value = "";
+
+  closeForm("modifica");
+  afiseazaTabel();
+}
+
+function melodie(ti, mu, ve, i) {
+  this.titlu = ti;
+  this.muzica = mu;
+  this.versuri = ve;
+  this.interpretare = i;
+  this.randNou = function() {
+    return "<tr><td>" + this.titlu + "</td><td>" + this.interpretare + "</td><td>" + this.versuri + "</td><td>" + this.muzica + "</td>";
+  }
+}
+
+function adaugaMelodie(frm) {
+  var mNoua = {
+    titlu: frm.titlu.value,
+    muzica: frm.muzica.value,
+    versuri: frm.versuri.value,
+    interpretare: frm.interpretare.value
+  };
+
+  melodii2Show.push(mNoua);
+  var myJSON = JSON.stringify(melodii2Show);
+  localStorage.setItem("melodiiArray", myJSON);
+
+  afiseazaTabel();
+  frm.reset();
+  closeForm("adauga");
+}
+
+function openFormA() {
+  document.getElementById("adauga").style.display = "block";
+}
+
+function openForm(rand) {
+  let frm = document.getElementById("modifica");
+  frm.style.display = "block";
+  nr = rand;
+  document.getElementById("titluM").value = melodii2Show[nr].titlu;
+  document.getElementById("interpretareM").value = melodii2Show[nr].interpretare;
+  document.getElementById("versuriM").value = melodii2Show[nr].versuri;
+  document.getElementById("muzicaM").value = melodii2Show[nr].muzica;
+}
+
+function closeForm(opt) {
+  document.getElementById(opt).style.display = "none";
+}
+</script>
+
+<!--
+Analiza L9_Melodii.html (Exercitiul 3):
+
+1. Ce este deja adaptat la melodii:
+- Titlul paginii (<title>) si antetul principal (<h1>).
+- Butoanele de incarcare a datelor: getAJAX('Melodii_JSON.txt') si "Incarca tabel melodii".
+- Antetul tabelului (#tm): Titlu, Interpretata de, Versuri, Muzica, Operatii.
+- Tabloul global: const melodii2Show = [].
+- Constructorul function melodie(ti, mu, ve, i) cu proprietatile titlu, muzica, versuri, 
+interpretare si metoda randNou().
+- Functia loadTable(), care parseaza Melodii_JSON.txt, construieste obiecte melodie pentru a 
+genera randurile in tabel si populeaza melodii2Show.
+
+2. Ce NU este adaptat (a ramas de la masini):
+- Textul butonului "Adauga masina".
+- Formularele popup (#adauga si #modifica): titlurile ("Adauga masina", "Modifica masina"), campurile 
+(marca, model, culoare / marcaM, modelM, culoareM) si functiile apelate la onsubmit (adaugaMasina, modificaMasina).
+- Functiile stergeMasina(nr), modificaMasina(), adaugaMasina(frm) si openForm(rand), care folosesc in continuare:
+  * tabloul inexistent masini2Show (in loc de melodii2Show);
+  * constructorul inexistent new masina(...) (in loc de new melodie(...));
+  * cheia de localStorage "carsArray";
+  * antetul vechi al tabelului la redesenare (Marca, Model, Culoare);
+  * proprietatile marca, model, culoare in openForm(rand).
+
+3. Erorile care apar in consola la fiecare operatie:
+- Stergere (butonul "Stergere" -> stergeMasina):
+  Uncaught ReferenceError: masini2Show is not defined
+- Modificare (butonul "Modificare" -> openForm):
+  Uncaught ReferenceError: masini2Show is not defined (formularul se deschide, dar campurile raman goale)
+  Daca se completeaza si se trimite formularul (modificaMasina):
+  Uncaught ReferenceError: masina is not defined
+- Adaugare (butonul "Adauga masina" deschide formularul fara eroare, dar la trimitere -> adaugaMasina):
+  Uncaught ReferenceError: masina is not defined
+-->
+</body>
+</html>
