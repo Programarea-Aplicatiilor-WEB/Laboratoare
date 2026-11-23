@@ -1,0 +1,372 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Tabel melodii</title>
+<style>
+table {
+  font-family: Arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.formPopup {
+  display: none;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border: 2px solid #999999;
+  z-index: 9;
+  background-color: white;
+  width: 420px;
+  max-width: 95%;
+}
+
+.formContainer {
+  width: 100%;
+  padding: 20px;
+  background-color: #fff;
+}
+
+.formContainer h2 {
+  margin-top: 0;
+  text-align: center;
+}
+
+.formContainer label {
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+.formContainer input[type=text] {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  background: #eee;
+}
+
+.formContainer button {
+  padding: 8px 15px;
+  margin-right: 5px;
+  cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Melodii incarcate de pe server</h1>
+
+<button onclick="getAJAX('Melodii_JSON.txt')">
+  Incarca array melodii de pe server
+</button>
+
+<br><br>
+
+<button onclick="loadTable()">
+  Incarca tabel melodii
+</button>
+
+<br><br>
+
+<button onclick="openFormA()">
+  Adauga melodie
+</button>
+
+<br><br>
+
+<table id="tm">
+<tr>
+  <th>Titlu</th>
+  <th>Interpretata de</th>
+  <th>Versuri</th>
+  <th>Muzica</th>
+  <th colspan="2" style="text-align:center">Operatii</th>
+</tr>
+</table>
+
+<div>
+  <span id="raw"></span>
+</div>
+
+<div class="formPopup" id="adauga">
+  <form onsubmit="adaugaMelodie(this); return false;" class="formContainer">
+
+    <h2>Adauga melodie</h2>
+
+    <label for="titlu">
+      <strong>Titlu</strong>
+    </label>
+    <input type="text" id="titlu" name="titlu"
+           placeholder="Titlul melodiei" required>
+
+    <label for="interpret">
+      <strong>Interpretata de</strong>
+    </label>
+    <input type="text" id="interpret" name="interpret"
+           placeholder="Numele interpretului" required>
+
+    <label for="versuri">
+      <strong>Versuri</strong>
+    </label>
+    <input type="text" id="versuri" name="versuri"
+           placeholder="Versurile melodiei" required>
+
+    <label for="muzica">
+      <strong>Muzica</strong>
+    </label>
+    <input type="text" id="muzica" name="muzica"
+           placeholder="Compozitorul" required>
+
+    <button type="submit">Adauga</button>
+    <button type="button" onclick="closeForm('adauga')">
+      Close
+    </button>
+
+  </form>
+</div>
+
+<div class="formPopup" id="modifica">
+  <form onsubmit="modificaMelodie(this); return false;" class="formContainer">
+
+    <h2>Modifica melodie</h2>
+
+    <label for="titluM">Titlu</label>
+    <input type="text" id="titluM" name="titlu" required>
+
+    <label for="interpretM">Interpretata de</label>
+    <input type="text" id="interpretM" name="interpret" required>
+
+    <label for="versuriM">Versuri</label>
+    <input type="text" id="versuriM" name="versuri" required>
+
+    <label for="muzicaM">Muzica</label>
+    <input type="text" id="muzicaM" name="muzica" required>
+
+    <button type="submit">Modifica</button>
+    <button type="button" onclick="closeForm('modifica')">
+      Close
+    </button>
+
+  </form>
+</div>
+
+<script>
+
+const melodii2Show = [];
+
+let fileContent;
+let nr;
+
+function melodie(ti, mu, ve, i) {
+  this.titlu = ti;
+  this.muzica = mu;
+  this.versuri = ve;
+  this.interpretare = i;
+
+  this.randNou = function() {
+    return "<tr><td>" + this.titlu +
+           "</td><td>" + this.interpretare +
+           "</td><td>" + this.versuri +
+           "</td><td>" + this.muzica + "</td>";
+  };
+}
+
+function openFormA() {
+  document.getElementById("adauga").style.display = "block";
+}
+
+async function getAJAX(file) {
+  try {
+    let myObject = await fetch(file);
+
+    if (!myObject.ok) {
+      throw new Error("Eroare la incarcarea fisierului.");
+    }
+
+    fileContent = await myObject.text();
+
+    document.getElementById("raw").innerHTML = fileContent;
+
+  } catch (error) {
+    alert(error.message);
+  }
+}
+
+function loadTable() {
+
+  if (!fileContent) {
+    alert("Incarcati mai intai array-ul de melodii!");
+    return;
+  }
+
+  try {
+    var melodiiStored = JSON.parse(fileContent);
+
+    melodii2Show.length = 0;
+
+    for (let i = 0; i < melodiiStored.length; i++) {
+      melodii2Show.push(melodiiStored[i]);
+    }
+
+    afiseazaTabel();
+
+  } catch (error) {
+    alert("Fisierul JSON nu contine date valide!");
+  }
+}
+
+function afiseazaTabel() {
+
+  document.getElementById("tm").innerHTML =
+    "<tr>" +
+    "<th>Titlu</th>" +
+    "<th>Interpretata de</th>" +
+    "<th>Versuri</th>" +
+    "<th>Muzica</th>" +
+    "<th colspan='2' style='text-align:center'>Operatii</th>" +
+    "</tr>";
+
+  for (let i = 0; i < melodii2Show.length; i++) {
+
+    var m_curenta = new melodie(
+      melodii2Show[i].titlu,
+      melodii2Show[i].muzica,
+      melodii2Show[i].versuri,
+      melodii2Show[i].interpretare
+    );
+
+    document.getElementById("tm").innerHTML +=
+      m_curenta.randNou() +
+      "<td><button onclick='openForm(" + i + ")'>Modificare</button></td>" +
+      "<td><button onclick='stergeMelodie(" + i + ")'>Stergere</button></td></tr>";
+  }
+}
+function openForm(rand) {
+  nr = rand;
+
+  document.getElementById("titluM").value =
+    melodii2Show[nr].titlu;
+
+  document.getElementById("interpretM").value =
+    melodii2Show[nr].interpretare;
+
+  document.getElementById("versuriM").value =
+    melodii2Show[nr].versuri;
+
+  document.getElementById("muzicaM").value =
+    melodii2Show[nr].muzica;
+
+  document.getElementById("modifica").style.display = "block";
+}
+
+function adaugaMelodie(frm) {
+
+  var mNoua = new melodie(
+    frm.titlu.value,
+    frm.muzica.value,
+    frm.versuri.value,
+    frm.interpret.value
+  );
+
+  melodii2Show.push(mNoua);
+
+  salveazaMelodii();
+  afiseazaTabel();
+
+  frm.reset();
+
+  closeForm("adauga");
+}
+
+function openFormA() {
+  document.getElementById("adauga").style.display = "block";
+}
+
+function modificaMelodie(frm) {
+
+  var mMod = new melodie(
+    frm.titlu.value,
+    frm.muzica.value,
+    frm.versuri.value,
+    frm.interpret.value
+  );
+
+  melodii2Show.splice(nr, 1, mMod);
+
+  salveazaMelodii();
+  afiseazaTabel();
+
+  frm.reset();
+
+  closeForm("modifica");
+}
+
+function stergeMelodie(nr) {
+
+  melodii2Show.splice(nr, 1);
+
+  salveazaMelodii();
+  afiseazaTabel();
+}
+
+function salveazaMelodii() {
+
+  var myJSON = JSON.stringify(melodii2Show);
+
+  localStorage.setItem("melodiiArray", myJSON);
+}
+
+function closeForm(opt) {
+  document.getElementById(opt).style.display = "none";
+}
+
+
+</script>
+
+</body>
+</html>
+
+<!--
+Ce nu este adaptat pentru melodii:
+  > formularul pentru modificare (introduce date pentru masini)
+  > butonul "Adaugare masina"
+
+Ce este adaptat pentru melodii:
+  > formatarea tabelului 
+  > butonul "Incarca array melodii de pe server"
+  > butonu "Incarca tabel melodii"
+
+Erori:
+  > Adaugare: L9_Melodii.html?vsco…ivepreview=true:175 Uncaught ReferenceError: masina is not defined
+    at adaugaMasina (L9_Melodii.html?vsco…preview=true:175:13)
+    at HTMLFormElement.onsubmit (L9_Melodii.html?vsco…epreview=true:73:89)
+adaugaMasina	@	L9_Melodii.html?vsco…ivepreview=true:175
+onsubmit	@	L9_Melodii.html?vsco…livepreview=true:73
+  > obiectul masina nu este definit
+
+  > Modificare: L9_Melodii.html?vsco…ivepreview=true:194 Uncaught ReferenceError: masini2Show is not defined
+    at openForm (L9_Melodii.html?vsco…preview=true:194:18)
+    at HTMLButtonElement.onclick (L9_Melodii.html?vsco…ivepreview=true:1:1)
+openForm	@	L9_Melodii.html?vsco…ivepreview=true:194
+onclick	@	L9_Melodii.html?vsco…-livepreview=true:1
+  > Stergere: L9_Melodii.html?vsco…ivepreview=true:153 Uncaught ReferenceError: masini2Show is not defined
+    at stergeMasina (L9_Melodii.html?vsco…epreview=true:153:1)
+    at HTMLButtonElement.onclick (L9_Melodii.html?vsco…ivepreview=true:1:1)
+stergeMasina	@	L9_Melodii.html?vsco…ivepreview=true:153
+onclick	@	L9_Melodii.html?vsco…-livepreview=true:1
+-->
