@@ -1,0 +1,196 @@
+
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista melodiilor</title>
+</head>
+<body>
+
+    <h2>Lista melodiilor</h2>
+
+    <button onclick="incarcaDate()">Încărcare date</button>
+
+    <table border="1" id="tabel">
+        <thead>
+            <tr>
+                <th>Titlu</th>
+                <th>Interpret</th>
+                <th>Versuri</th>
+                <th>Muzică</th>
+                <th>Operații</th>
+            </tr>
+        </thead>
+        <tbody id="corp"></tbody>
+    </table>
+
+    <br>
+
+    <button onclick="deschideAdaugare()">Adăugare melodie</button>
+
+    <h3 id="titluFormular" style="display:none">
+        Formular melodie
+    </h3>
+
+    <div id="formular" style="display:none">
+
+        <input id="titlu" placeholder="Titlu">
+        <input id="interpret" placeholder="Interpret">
+        <input id="versuri" placeholder="Versuri">
+        <input id="muzica" placeholder="Muzică">
+
+        <br><br>
+
+        <button onclick="salveaza()">Salvare</button>
+        <button onclick="inchideFormular()">Anulare</button>
+
+    </div>
+
+    <script>
+
+        let melodii = [
+            {
+                titlu: "Thunderstruck",
+                interpret: "AC/DC",
+                versuri: "Malcolm",
+                muzica: "Angus"
+            },
+            {
+                titlu: "Slow Low",
+                interpret: "Jason Derulo",
+                versuri: "Derulo",
+                muzica: "Jason"
+            },
+            {
+                titlu: "With or Without You",
+                interpret: "U2",
+                versuri: "Bono",
+                muzica: "The Edge"
+            }
+        ];
+
+        let indexModificare = -1;
+
+        function incarcaDate() {
+            afiseazaTabel();
+        }
+
+        function afiseazaTabel() {
+
+            let corp = document.getElementById("corp");
+
+            corp.innerHTML = "";
+
+            melodii.forEach((melodie, index) => {
+
+                corp.innerHTML += `
+                    <tr>
+                        <td>${melodie.titlu}</td>
+                        <td>${melodie.interpret}</td>
+                        <td>${melodie.versuri}</td>
+                        <td>${melodie.muzica}</td>
+                        <td>
+                            <button onclick="sterge(${index})">
+                                Ștergere
+                            </button>
+
+                            <button onclick="modifica(${index})">
+                                Modificare
+                            </button>
+                        </td>
+                    </tr>
+                `;
+
+            });
+        }
+
+        function deschideAdaugare() {
+
+            indexModificare = -1;
+
+            document.getElementById("titlu").value = "";
+            document.getElementById("interpret").value = "";
+            document.getElementById("versuri").value = "";
+            document.getElementById("muzica").value = "";
+
+            document.getElementById("formular").style.display = "block";
+            document.getElementById("titluFormular").style.display = "block";
+        }
+
+        function modifica(index) {
+
+            let melodie = melodii[index];
+
+            indexModificare = index;
+
+            document.getElementById("titlu").value = melodie.titlu;
+            document.getElementById("interpret").value = melodie.interpret;
+            document.getElementById("versuri").value = melodie.versuri;
+            document.getElementById("muzica").value = melodie.muzica;
+
+            document.getElementById("formular").style.display = "block";
+            document.getElementById("titluFormular").style.display = "block";
+        }
+
+        function salveaza() {
+
+            let melodieNoua = {
+                titlu: document.getElementById("titlu").value,
+                interpret: document.getElementById("interpret").value,
+                versuri: document.getElementById("versuri").value,
+                muzica: document.getElementById("muzica").value
+            };
+
+            if (indexModificare == -1) {
+
+                melodii.push(melodieNoua);
+
+            } else {
+
+                melodii[indexModificare] = melodieNoua;
+
+            }
+
+            afiseazaTabel();
+
+            inchideFormular();
+        }
+
+        function inchideFormular() {
+
+            document.getElementById("titlu").value = "";
+            document.getElementById("interpret").value = "";
+            document.getElementById("versuri").value = "";
+            document.getElementById("muzica").value = "";
+
+            document.getElementById("formular").style.display = "none";
+            document.getElementById("titluFormular").style.display = "none";
+
+            indexModificare = -1;
+        }
+
+        function sterge(index) {
+
+            melodii.splice(index, 1);
+
+            afiseazaTabel();
+        }
+
+    </script>
+
+</body>
+</html>
+
+<!--
+
+Adaptate:
+Am adaugat titlu, muzica, versuri si interpretare si afisarea.
+
+Nu sunt adaptate:
+Unele functii pot contine nume specific altor tipuri dedate.
+
+Eroari:
+Apare eroare daca folosesc/modific/adaug o proprietate inexistenta
+
+Acum,operatiile de folosire modificare si adaugare merg fara functii
+-->
